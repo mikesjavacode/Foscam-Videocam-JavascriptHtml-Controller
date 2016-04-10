@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Foscam Video Client</title>
+</head>
+
+<script type="text/javascript">
+
+// Set Foscam specific address, user name, and password
+var fosUser = 'user'
+var fosPassword = 'password'
+var fosURL = '10.20.30.40:88'
+
+// Foscam command array
+var cmdVal = new Array(); 
+
+// Load Foscam commands
+cmdVal[0]  = 'ptzStopRun'
+cmdVal[1]  = 'ptzReset'
+
+cmdVal[2]  = 'ptzMoveUp'
+cmdVal[3]  = 'ptzMoveDown'
+
+cmdVal[4]  = 'ptzMoveLeft'
+cmdVal[5]  = 'ptzMoveRight'
+
+cmdVal[6]  = 'ptzMoveTopLeft'	
+cmdVal[7]  = 'ptzMoveTopRight'
+
+cmdVal[8]  = 'ptzMoveBottomLeft'	
+cmdVal[9]  = 'ptzMoveBottomRight'
+
+cmdVal[10] = 'getPTZSpeed'
+cmdVal[11] = 'setPTZSpeed'
+
+cmdVal[12] = 'ptzAddPresetPoint'
+cmdVal[13] = 'ptzGotoPresetPoint'
+cmdVal[14] = 'ptzDeletePresetPoint'
+cmdVal[15] = 'getPTZPresetPointList'
+
+cmdVal[16] = 'ptzSetCruiseMap'
+cmdVal[17] = 'ptzStartCruise'
+cmdVal[18] = 'ptzStopCruise'
+cmdVal[19] = 'ptzDelCruiseMap'
+cmdVal[20] = 'ptzGetCruiseMapInfo'
+
+cmdVal[25] = 'getIPInfo'
+
+
+// Function to keep reloading Foscam image with time delay 
+function reload()
+{
+   setTimeout('reloadImg("refresh")',200)
+};
+
+// Function to load Foscam image
+function reloadImg(id) 
+{ 
+   var obj = document.getElementById(id); 
+   var date = new Date();
+   var snapPic = 'http://'+fosURL+'/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr='+fosUser+'&pwd='+fosPassword; 
+
+   obj.src = snapPic+'&t=' + Math.floor(date.getTime()/200); 
+} 
+
+// Function to receive menu commands from menu table below
+function fosComm(arg, chrType) 
+{  
+ 	if(document.getElementById('ifrResult'))
+	{
+		// Put together complete camera command
+		chrCGI = 'http://'+fosURL+'/cgi-bin/CGIProxy.fcgi?cmd='+cmdVal[chrType]+'&usr='+fosUser+'&pwd='+fosPassword+arg
+		// Send camera command
+		document.getElementById('ifrResult').src=chrCGI;
+	}
+}
+	
+</script>
+
+<!-- Load Foscam image into browser -->
+<img src="Foscam View" name="refresh" id="refresh" onload='reload(this)' onerror='reload(this)'> 
+
+<body>
+
+<table>
+    <tr>
+        <td colspan="2" style="font-size:11pt;">
+            CONTROL PANEL 
+        </td>
+    </tr>
+    <tr>
+        <td>Tilt</td>
+        <td>
+            <a href="javascript:fosComm('',3)">Tilt Down</a>
+			<a href="javascript:fosComm('',2)">Tilt Up</a>
+			<a href="javascript:fosComm('',0)">Stop</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Pan</td>
+        <td>
+            <a href="javascript:fosComm('',4)">Move Left</a>
+			<a href="javascript:fosComm('',5)">Move Right</a>
+			<a href="javascript:fosComm('',0)">Stop</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Top</td>
+        <td>
+            <a href="javascript:fosComm('',6)">Top Left Back</a>
+			<a href="javascript:fosComm('',7)">Top Right Back</a>
+			<a href="javascript:fosComm('',0)">Stop</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Bottom</td>
+        <td>
+            <a href="javascript:fosComm('',8)">Bottom Left Back</a>
+			<a href="javascript:fosComm('',9)">Bottom Right Back</a>
+			<a href="javascript:fosComm('',0)">Stop</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Reset Position</td>
+        <td>
+			<a href="javascript:fosComm('',1)">Reset</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Get & Set Speed</td>
+		<td>
+			<a href="javascript:fosComm('',10)">Get Speed</a>
+			<a href="javascript:fosComm('&speed=4',11)">Very Slow</a>
+			<a href="javascript:fosComm('&speed=3',11)">Slow</a>
+			<a href="javascript:fosComm('&speed=2',11)">Normal</a>
+			<a href="javascript:fosComm('&speed=1',11)">Fast</a>
+			<a href="javascript:fosComm('&speed=0',11)">Very Fast</a>
+        </td>
+    </tr>
+
+    <tr>
+        <td>Get Points List</td>
+		<td>
+			<a href="javascript:fosComm('',15)">Get List</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Set Points</td>
+		<td>
+			<a href="javascript:fosComm('&name=wp1',12)">Add Point #1</a>
+			<a href="javascript:fosComm('&name=wp2',12)">Add Point #2</a>
+			<a href="javascript:fosComm('&name=wp3',12)">Add Point #3</a>
+			<a href="javascript:fosComm('&name=wp4',12)">Add Point #4</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Go to Points</td>
+		<td>
+			<a href="javascript:fosComm('&name=wp1',13)">Goto Point #1</a>
+			<a href="javascript:fosComm('&name=wp2',13)">Goto Point #2</a>
+			<a href="javascript:fosComm('&name=wp3',13)">Goto Point #3</a>
+			<a href="javascript:fosComm('&name=wp4',13)">Goto Point #4</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Delete Points</td>
+		<td>
+			<a href="javascript:fosComm('&name=wp1',14)">Delete Point #1</a>
+			<a href="javascript:fosComm('&name=wp2',14)">Delete Point #2</a>
+			<a href="javascript:fosComm('&name=wp3',14)">Delete Point #3</a>
+			<a href="javascript:fosComm('&name=wp4',14)">Delete Point #4</a>
+        </td>
+    </tr>
+
+    <tr>
+        <td>Cruise Options</td>
+		<td>
+			<a href="javascript:fosComm('&name=testmap&point0=wp1&point1=wp2&point2=wp3&point3=wp4',16)">Set Cruise Map</a>
+			<a href="javascript:fosComm('&mapName=testmap',17)">Start Cruise</a>
+			<a href="javascript:fosComm('',18)">Stop Cruise</a>
+			<a href="javascript:fosComm('&name=testmap',19)">Delete Cruise Map</a>
+			<a href="javascript:fosComm('&name=testmap',20)">Get Map Info</a>        
+		</td>
+    </tr>
+
+    <tr>
+        <td>Get IP Address Information</td>
+        <td>
+			<a href="javascript:fosComm('',25)">Get IP Info</a>
+        </td>
+    </tr>
+    
+</table>
+
+<!-- Get Foscam error message type - note that zero means that everything was processed correctly -->
+<br>
+Foscam Return XML Messages:<br>
+<iframe id="ifrResult" name="ifrResult" style="border:0pt;width:640px;height:480px;"></iframe>
+
+</body>
+
+</html>
